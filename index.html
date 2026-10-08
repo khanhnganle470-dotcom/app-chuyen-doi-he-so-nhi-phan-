@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIN // DEC - Y2K Number System Terminal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #EBF4FA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .window-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 750px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+            border: 1px solid #D1D5DB;
+            overflow: hidden;
+            padding: 30px;
+            position: relative;
+        }
+
+        .window-dots {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            display: flex;
+            gap: 6px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #D1D5DB;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1D4ED8;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            font-weight: bold;
+            color: #6B7280;
+            margin-top: 2px;
+            margin-bottom: 25px;
+        }
+
+        .section-box {
+            background: #ffffff;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #374151;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .converter-grid {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: #9CA3AF;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 38px;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            padding: 0 12px;
+            font-size: 14px;
+            color: #1F2937;
+            outline: none;
+            transition: all 0.2s;
+            background-color: #F9FAFB;
+        }
+
+        .input-group input:focus {
+            border-color: #3B82F6;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .swap-btn {
+            height: 38px;
+            width: 40px;
+            border: 1px solid #D1D5DB;
+            background: #F3F4F6;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            color: #374151;
+            transition: all 0.15s;
+        }
+        .swap-btn:hover {
+            background: #E5E7EB;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            height: 32px;
+            padding: 0 16px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .btn-convert {
+            background: #3B82F6;
+            color: white;
+        }
+        .btn-convert:hover {
+            background: #2563EB;
+        }
+
+        .btn-calc {
+            background: #3B82F6;
+            color: white;
+        }
+        .btn-calc:hover {
+            background: #2563EB;
+        }
+
+        .btn-clear {
+            background: #E5E7EB;
+            color: #374151;
+        }
+        .btn-clear:hover {
+            background: #D1D5DB;
+        }
+
+        .status-bar {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            font-weight: bold;
+            color: #10B981;
+            margin-top: 10px;
+        }
+
+        .status-bar.error {
+            color: #EF4444;
+        }
+        .status-bar.warning {
+            color: #F59E0B;
+        }
+    </style>
+</head>
+<body>
+
+<div class="window-container">
+    <div class="window-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div class="header">
+        <h1>BIN // DEC</h1>
+        <p>Y2K NUMBER SYSTEM TERMINAL - v1.0</p>
+    </div>
+
+    <!-- PHẦN 01: BỘ CHUYỂN ĐỔI -->
+    <div class="section-box">
+        <div class="section-title">01 / CONVERTER – HỆ NHỊ PHÂN ⇄ THẬP PHÂN</div>
+        
+        <div class="converter-grid">
+            <div class="input-group">
+                <label>BINARY (BASE 2)</label>
+                <input type="text" id="binInput" placeholder="VD: 101101">
+            </div>
+
+            <button class="swap-btn" onclick="swapValues()">⇄</button>
+
+            <div class="input-group">
+                <label>DECIMAL (BASE 10)</label>
+                <input type="text" id="decInput" placeholder="VD: 45">
+            </div>
+        </div>
+
+        <div class="buttons-row">
+            <button class="btn btn-convert" onclick="processConversion()">CONVERT</button>
+            <button class="btn btn-clear" onclick="clearAll()">CLEAR</button>
+        </div>
+
+        <div class="status-bar" id="statusMessage">READY_</div>
+    </div>
+
+    <!-- PHẦN 02: MÁY TÍNH HỆ NHỊ PHÂN -->
+    <div class="section-box">
+        <div class="section-title">02 / BINARY CALCULATOR</div>
+        
+        <div class="converter-grid">
+            <div class="input-group">
+                <label>BINARY VALUE A</label>
+                <input type="text" id="calcInputA" placeholder="VD: 1010">
+            </div>
+            <div class="input-group">
+                <label>BINARY VALUE B</label>
+                <input type="text" id="calcInputB" placeholder="VD: 11">
+            </div>
+            <div class="input-group">
+                <label>RESULT (BINARY)</label>
+                <input type="text" id="calcResult" placeholder="Kết quả" readonly style="background-color: #F3F4F6; cursor: not-allowed;">
+            </div>
+        </div>
+
+        <div class="buttons-row">
+            <button class="btn btn-calc" onclick="calculate('add')">+ ADD</button>
+            <button class="btn btn-calc" onclick="calculate('sub')">- SUBTRACT</button>
+            <button class="btn btn-calc" onclick="calculate('mul')">× MULTIPLY</button>
+            <button class="btn btn-calc" onclick="calculate('div')">÷ DIVIDE</button>
+            <button class="btn btn-clear" onclick="clearCalc()">CLEAR</button>
+        </div>
+
+        <div class="status-bar" id="calcStatusMessage">CALCULATOR READY_</div>
+    </div>
+</div>
+
+<script>
+    const binInput = document.getElementById('binInput');
+    const decInput = document.getElementById('decInput');
+    const statusMessage = document.getElementById('statusMessage');
+
+    function processConversion() {
+        const binVal = binInput.value.trim();
+        const decVal = decInput.value.trim();
+        statusMessage.className = 'status-bar';
+
+        if (binVal !== "" && decVal === "") {
+            if (!/^[01]+$/.test(binVal)) {
+                statusMessage.textContent = "ERROR: DỮ LIỆU NHỊ PHÂN KHÔNG HỢP LỆ!_";
+                statusMessage.className = 'status-bar error';
+                return;
+            }
+            const result = parseInt(binVal, 2);
+            decInput.value = result;
+            statusMessage.textContent = "CONVERT SUCCESS_";
+        } 
+        else if (decVal !== "" && binVal === "") {
+            if (!/^\d+$/.test(decVal)) {
+                statusMessage.textContent = "ERROR: DỮ LIỆU THẬP PHÂN KHÔNG HỢP LỆ!_";
+                statusMessage.className = 'status-bar error';
+                return;
+            }
+            const result = Number(decVal).toString(2);
+            binInput.value = result;
+            statusMessage.textContent = "CONVERT SUCCESS_";
+        } 
+        else if (binVal === "" && decVal === "") {
+            statusMessage.textContent = "VUI LÒNG NHẬP DỮ LIỆU VÀO MỘT TRONG HAI Ô!_";
+            statusMessage.className = 'status-bar warning';
+        } else {
+            statusMessage.textContent = "VUI LÒNG CHỈ NHẬP VÀO 1 Ô ĐỂ ĐỔI CHIỀU CHÍNH XÁC!_";
+            statusMessage.className = 'status-bar warning';
+        }
+    }
+
+    function swapValues() {
+        const temp = binInput.value;
+        binInput.value = decInput.value;
+        decInput.value = temp;
+        statusMessage.textContent = "SWAPPED_";
+        statusMessage.className = 'status-bar';
+    }
+
+    function clearAll() {
+        binInput.value = "";
+        decInput.value = "";
+        statusMessage.textContent = "READY_";
+        statusMessage.className = 'status-bar';
+    }
+
+    const calcInputA = document.getElementById('calcInputA');
+    const calcInputB = document.getElementById('calcInputB');
+    const calcResult = document.getElementById('calcResult');
+    const calcStatusMessage = document.getElementById('calcStatusMessage');
+
+    function calculate(operation) {
+        const valA = calcInputA.value.trim();
+        const valB = calcInputB.value.trim();
+        calcStatusMessage.className = 'status-bar';
+        calcResult.value = "";
+
+        if (valA === "" || valB === "") {
+            calcStatusMessage.textContent = "ERROR: VUI LÒNG NHẬP ĐẦY ĐỦ CẢ HAI GIÁ TRỊ A VÀ B!_";
+            calcStatusMessage.className = 'status-bar warning';
+            return;
+        }
+
+        if (!/^[01]+$/.test(valA) || !/^[01]+$/.test(valB)) {
+            calcStatusMessage.textContent = "ERROR: GIÁ TRỊ NHẬP VÀO PHẢI LÀ SỐ NHỊ PHÂN (CHỈ GỒM 0 VÀ 1)!_";
+            calcStatusMessage.className = 'status-bar error';
+            return;
+        }
+
+        const numA = parseInt(valA, 2);
+        const numB = parseInt(valB, 2);
+        let resultNum = 0;
+
+        switch(operation) {
+            case 'add':
+                resultNum = numA + numB;
+                calcStatusMessage.textContent = "ADDITION SUCCESS_";
+                break;
+            case 'sub':
+                resultNum = numA - numB;
+                if (resultNum < 0) {
+                    calcStatusMessage.textContent = "ERROR: KẾT QUẢ PHÉP TRỪ BỊ ÂM (CHƯA HỖ TRỢ DẤU CO MÃ BÙ)!_";
+                    calcStatusMessage.className = 'status-bar error';
+                    return;
+                }
+                calcStatusMessage.textContent = "SUBTRACTION SUCCESS_";
+                break;
+            case 'mul':
+                resultNum = numA * numB;
+                calcStatusMessage.textContent = "MULTIPLICATION SUCCESS_";
+                break;
+            case 'div':
+                if (numB === 0) {
+                    calcStatusMessage.textContent = "ERROR: KHÔNG THỂ CHIA CHO SỐ 0!_";
+                    calcStatusMessage.className = 'status-bar error';
+                    return;
+                }
+                resultNum = Math.floor(numA / numB);
+                calcStatusMessage.textContent = "DIVISION SUCCESS (LẤY PHẦN NGUYÊN)_";
+                break;
+        }
+
+        calcResult.value = resultNum.toString(2);
+    }
+
+    function clearCalc() {
+        calcInputA.value = "";
+        calcInputB.value = "";
+        calcResult.value = "";
+        calcStatusMessage.textContent = "CALCULATOR READY_";
+        calcStatusMessage.className = 'status-bar';
+    }
+</script>
+</body>
+</html>
